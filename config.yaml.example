@@ -1,0 +1,36 @@
+origins:
+  - "12309 SE 23rd Pl, Bellevue, WA 98005"          # Current home
+  - "1005 8th St, Kirkland, WA 98033"               # Place in Kirkland
+  - "600 NW Richmond Beach Rd, Shoreline, WA 98177" # Place in Shoreline
+  - "5700 24th Ave NW, Seattle, WA 98107"           # Place in Ballard
+  - "2740 61st Ave SW, Seattle, WA 98116"           # Place in West Seattle
+
+destinations:
+  - 2111 7th Ave, Seattle, WA 98121                 # My work
+  - 85 Pike St, Seattle, WA 98101                   # Her work
+
+routes:
+  to: To work
+  from: From work
+
+cron:
+  - destination: "2111 7th Ave, Seattle, WA 98121"
+    to_times:
+      - "09:00am"
+      - "09:30am"
+      - "10:00am"
+    from_times:
+      - "06:30pm"
+      - "06:45pm"
+      - "07:00pm"
+  - destination: "85 Pike St, Seattle, WA 98101"
+    to_times:
+      - "06:30am"
+      - "06:45am"
+      - "07:00am"
+    from_times:
+      - "04:00pm"
+      - "04:15pm"
+      - "04:30pm"
+
+apikey: <your google maps api key, enabled for Distance Matrix API>
