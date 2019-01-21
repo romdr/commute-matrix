@@ -1,9 +1,9 @@
 # commute-matrix
-A command line utility to display a matrices of commute times using google maps with real traffic at specific times
+A command line utility to display a matrix of commute times using google maps with real traffic at specific times
 
 ## Features
 
-* Displays a commute time matrix from/to a set of addresses, using with-traffic estimates from the Google Distance Matrix API
+* Displays commute time matrices from/to a set of addresses, using with-traffic estimates from the Google Distance Matrix API
 * Yaml configuration (rename config.yaml.example to config.yaml)
 * Requires a Google Distance Matrix [API key](https://developers.google.com/maps/documentation/distance-matrix/get-api-key)
 * TODO: Commute times are configured and obtained at specific times
