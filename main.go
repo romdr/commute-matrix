@@ -2,12 +2,14 @@ package main
 
 import (
 	"context"
+	"flag"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"os"
 	"time"
 
+	"github.com/jasonlvhit/gocron"
 	"github.com/olekukonko/tablewriter"
 	"googlemaps.github.io/maps"
 	"gopkg.in/yaml.v2"
@@ -90,15 +92,52 @@ func printTable(distanceMatrixResponse *maps.DistanceMatrixResponse, origins, de
 	fmt.Println("")
 }
 
+func printToDestinations(client *maps.Client, config *Config) {
+	printTable(getDistanceMatrix(client, config.OriginAddresses, config.DestinationAddresses), config.OriginAddresses, config.DestinationAddresses, false)
+}
+
+func printFromDestinations(client *maps.Client, config *Config) {
+	printTable(getDistanceMatrix(client, config.DestinationAddresses, config.OriginAddresses), config.OriginAddresses, config.DestinationAddresses, true)
+}
+
+func toMilitaryTime(s string) string {
+	t, err := time.Parse("03:04pm", s)
+	if err != nil {
+		log.Fatalf("ERROR: %s", err)
+	}
+	return t.Format("15:04")
+}
+
 func main() {
+	// Load the configuration
 	var config Config
 	config.load()
 
+	// Instantiate the Maps API client
 	client, err := maps.NewClient(maps.WithAPIKey(config.ApiKey))
 	if err != nil {
 		log.Fatalf("ERROR: %s", err)
 	}
 
-	printTable(getDistanceMatrix(client, config.OriginAddresses, config.DestinationAddresses), config.OriginAddresses, config.DestinationAddresses, false)
-	printTable(getDistanceMatrix(client, config.DestinationAddresses, config.OriginAddresses), config.OriginAddresses, config.DestinationAddresses, true)
+	// Parse arguments
+	nowPtr := flag.Bool("now", false, "Print the commute matrix now (instead of scheduling it)")
+	flag.Parse()
+
+	if *nowPtr {
+		printToDestinations(client, &config)
+		printFromDestinations(client, &config)
+	} else {
+		fmt.Println("Commute matrix scheduled...")
+		for _, schedule := range config.Cron {
+			for _, toTime := range schedule.ToTimes {
+				gocron.Every(1).Day().At(toMilitaryTime(toTime)).Do(printToDestinations, client, &config)
+			}
+
+			for _, fromTime := range schedule.FromTimes {
+				gocron.Every(1).Day().At(toMilitaryTime(fromTime)).Do(printFromDestinations, client, &config)
+			}
+		}
+
+		<-gocron.Start()
+	}
 }
