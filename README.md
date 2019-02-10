@@ -1,4 +1,4 @@
-# commute-matrix
+# commute-matrix [![Go Report Card](https://goreportcard.com/badge/github.com/shazbits/commute-matrix)](https://goreportcard.com/report/github.com/shazbits/commute-matrix)
 A command line utility to display a matrix of commute times using google maps with real traffic at specific times
 
 ## Features
